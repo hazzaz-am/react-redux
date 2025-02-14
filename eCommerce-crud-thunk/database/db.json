@@ -1,0 +1,32 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "title": "Wireless Mouse",
+      "description": "A sleek wireless mouse with ergonomic design and long battery life.",
+      "price": "10.99",
+      "category": "Electronics"
+    },
+    {
+      "id": "2",
+      "title": "Mechanical Keyboard",
+      "description": "A durable mechanical keyboard wicustomizable RGB lighting.",
+      "price": 89.99,
+      "category": "Electronics"
+    },
+    {
+      "id": "3",
+      "title": "Noise-Cancelling Headphones",
+      "description": "Over-ear headphones with active noise cancellation and superior sound quality.",
+      "price": 199.99,
+      "category": "Electronics"
+    },
+    {
+      "id": "4",
+      "title": "4K Monitor",
+      "description": "A 27-inch 4K UHD monitor with vibrant colors and high refresh rate.",
+      "price": 349.99,
+      "category": "Electronics"
+    }
+  ]
+}
