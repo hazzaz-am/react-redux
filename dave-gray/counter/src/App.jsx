@@ -1,9 +1,10 @@
+import Counter from "./features/counter/Counter";
 
 function App() {
 	return (
 		<main className="App">
 			{/* TODO: Counter */}
-			App
+			<Counter />
 		</main>
 	);
 }
