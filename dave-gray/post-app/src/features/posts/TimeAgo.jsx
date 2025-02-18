@@ -5,11 +5,8 @@ const TimeAgo = ({ timestamp }) => {
 	let timeAgo = "";
 
 	if (timestamp) {
-    console.log('TIME STAMP', timestamp)
 		const date = parseISO(timestamp);
-		console.log("parseISO", date);
 		const timePeriod = formatDistanceToNow(date);
-		console.log("DISTANCE", timePeriod);
 		timeAgo = `${timePeriod} ago`;
 	}
 
