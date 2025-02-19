@@ -1,34 +1,51 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
+import axios from "axios";
 import { sub } from "date-fns";
 
-const initialState = [
-	{
-		id: "1",
-		title: "Learning Redux Toolkit",
-		content: "I've heard good things.",
-		date: sub(new Date(), { minutes: 10 }).toISOString(),
-		reactions: {
-			thumbsUp: 0,
-			wow: 0,
-			heart: 0,
-			rocket: 0,
-			coffee: 0,
-		},
-	},
-	{
-		id: "2",
-		title: "Slices...",
-		content: "The more I say slice, the more I want pizza.",
-		date: sub(new Date(), { minutes: 5 }).toISOString(),
-		reactions: {
-			thumbsUp: 0,
-			wow: 0,
-			heart: 0,
-			rocket: 0,
-			coffee: 0,
-		},
-	},
-];
+const POSTS_URL = "https://jsonplaceholder.typicode.com/posts";
+const initialState = {
+	posts: [],
+	status: "idle",
+	error: null,
+};
+
+export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
+	const response = await axios.get(POSTS_URL);
+	return [...response.data];
+});
+
+export const addNewPost = createAsyncThunk(
+	"posts/addNewPost",
+	async (initialPost) => {
+		const response = await axios.post(POSTS_URL, initialPost);
+		return response.data;
+	}
+);
+
+export const updatePost = createAsyncThunk(
+	"/posts/updatePost",
+	async (post) => {
+		const { id } = post;
+		try {
+			const response = await axios.put(`${POSTS_URL}/${id}`, post);
+			return response.data;
+		} catch (err) {
+			console.error("Can't Update", err);
+			return post;
+		}
+	}
+);
+
+export const deletePost = createAsyncThunk("posts/deletePost", async (post) => {
+	const { id } = post;
+	try {
+		const response = await axios.delete(`${POSTS_URL}/${id}`);
+		if (response?.status === 200) return post;
+		return `${response?.status}: ${response?.statusText}`;
+	} catch (error) {
+		return error.message;
+	}
+});
 
 const postsSlice = createSlice({
 	name: "posts",
@@ -36,7 +53,7 @@ const postsSlice = createSlice({
 	reducers: {
 		addPost: {
 			reducer: (state, action) => {
-				state.push(action.payload);
+				state.posts.push(action.payload);
 			},
 			prepare: (title, content, userId) => {
 				const id = nanoid();
@@ -61,16 +78,80 @@ const postsSlice = createSlice({
 		addReaction: {
 			reducer: (state, action) => {
 				const { postId, reaction } = action.payload;
-				const existingPost = state.find((post) => post.id === postId);
+				const existingPost = state.posts.find((post) => post.id === postId);
 				if (existingPost) {
 					existingPost.reactions[reaction]++;
 				}
 			},
 		},
 	},
+	extraReducers: (builder) => {
+		builder.addCase(fetchPosts.pending, (state) => {
+			state.status = "loading";
+		});
+		builder.addCase(fetchPosts.fulfilled, (state, action) => {
+			state.status = "succeeded";
+
+			let minute = 1;
+			const loadedPosts = action.payload.map((post) => {
+				(post.date = sub(new Date(), { minutes: minute++ }).toISOString()),
+					(post.reactions = {
+						thumbsUp: 0,
+						wow: 0,
+						heart: 0,
+						rocket: 0,
+						coffee: 0,
+					});
+				return post;
+			});
+
+			state.posts = state.posts.concat(loadedPosts);
+		});
+		builder.addCase(fetchPosts.rejected, (state, action) => {
+			state.status = "failed";
+			state.error = action.error.message;
+		});
+		builder.addCase(addNewPost.fulfilled, (state, action) => {
+			action.payload.userId = Number(action.payload.userId);
+			action.payload.date = new Date().toISOString();
+			action.payload.reactions = {
+				thumbsUp: 0,
+				wow: 0,
+				heart: 0,
+				rocket: 0,
+				coffee: 0,
+			};
+			state.posts.push(action.payload);
+		});
+		builder.addCase(updatePost.fulfilled, (state, action) => {
+			if (!action.payload.id) {
+				console.log("No id found in the response");
+				console.log(action.payload);
+				return;
+			}
+
+			const { id } = action.payload;
+			action.payload.date = new Date().toISOString();
+			const posts = state.posts.filter((post) => post.id !== id);
+			state.posts = [...posts, action.payload];
+		});
+		builder.addCase(deletePost.fulfilled, (state, action) => {
+			if (!action.payload?.id) {
+				console.log(`Can't Delete`);
+				return;
+			}
+			const { id } = action.payload;
+			const posts = state.posts.filter((post) => post.id !== id);
+			state.posts = posts;
+		});
+	},
 });
 
-export const { addPost, addReaction } = postsSlice.actions;
+export const selectAllPosts = (state) => state.postsR.posts;
+export const selectPosById = (state, postId) =>
+	state.postsR.posts.find((post) => post.id === postId);
+export const getPostsStatus = (state) => state.postsR.status;
+export const getPostsError = (state) => state.postsR.error;
 
-export const selectAllPosts = (state) => state.postsR;
+export const { addPost, addReaction } = postsSlice.actions;
 export default postsSlice.reducer;
