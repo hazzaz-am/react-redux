@@ -9,8 +9,15 @@ export const apiSlice = createApi({
 	endpoints: (builder) => ({
 		getTodos: builder.query({
 			query: () => "todos",
-			transformResponse: (res) => res.sort((a, b) => a.id - b.id),
-			providesTags: ["Todos"],
+			transformResponse: (res) =>
+				Array.isArray(res) ? [...res].sort((a, b) => b.id - a.id) : [],
+			providesTags: (result) =>
+				result
+					? [
+							...result.map(({ id }) => ({ type: "Todos", id })),
+							{ type: "Todos", id: "LIST" },
+					  ]
+					: [{ type: "Todos", id: "LIST" }],
 		}),
 		addTodo: builder.mutation({
 			query: (todo) => ({
@@ -18,7 +25,7 @@ export const apiSlice = createApi({
 				method: "POST",
 				body: todo,
 			}),
-			invalidatesTags: ["Todos"],
+			invalidatesTags: [{ type: "Todos", id: "LIST" }],
 		}),
 		updateTodo: builder.mutation({
 			query: (todo) => ({
@@ -26,14 +33,14 @@ export const apiSlice = createApi({
 				method: "PATCH",
 				body: todo,
 			}),
-			invalidatesTags: ["Todos"],
+			invalidatesTags: [{ type: "Todos", id: "LIST" }],
 		}),
 		deleteTodo: builder.mutation({
 			query: (id) => ({
 				url: `todos/${id}`,
 				method: "DELETE",
 			}),
-			invalidatesTags: ["Todos"],
+			invalidatesTags: [{ type: "Todos", id: "LIST" }],
 		}),
 	}),
 });
