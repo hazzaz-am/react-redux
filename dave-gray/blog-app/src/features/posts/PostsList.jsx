@@ -3,13 +3,13 @@ import {
 	fetchPosts,
 	getPostsError,
 	getPostsStatus,
-	selectAllPosts,
+	selectPostIds,
 } from "./postsSlice";
 import { useEffect } from "react";
 import PostExcerpt from "./PostExcerpt";
 
 const PostsList = () => {
-	const posts = useSelector(selectAllPosts);
+	const orderPostsIds = useSelector(selectPostIds);
 	const postsStatus = useSelector(getPostsStatus);
 	const error = useSelector(getPostsError);
 
@@ -26,20 +26,13 @@ const PostsList = () => {
 	if (postsStatus === "loading") {
 		content = <p>Loading...</p>;
 	} else if (postsStatus === "succeeded") {
-		const orderPosts = posts
-			.slice()
-			.sort((a, b) => b.date.localeCompare(a.date));
-		content = orderPosts.map((post) => (
-			<PostExcerpt key={post.id} post={post} />
+		content = orderPostsIds.map((postId) => (
+			<PostExcerpt key={postId} postId={postId} />
 		));
 	} else if (postsStatus === "failed") {
 		content = <p>{error}</p>;
 	}
 
-	return (
-		<section>
-			{content}
-		</section>
-	);
+	return <section>{content}</section>;
 };
 export default PostsList;

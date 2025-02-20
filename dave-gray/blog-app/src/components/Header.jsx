@@ -1,6 +1,10 @@
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
+import { getCount, incrementCounter } from "../features/posts/postsSlice";
 
 const Header = () => {
+	const dispatch = useDispatch();
+	const count = useSelector((state) => getCount(state));
 	return (
 		<header className="header">
 			<h1>Redux Blog</h1>
@@ -12,7 +16,11 @@ const Header = () => {
 					<li>
 						<Link to="/post">Post</Link>
 					</li>
+					<li>
+						<Link to="/user">User</Link>
+					</li>
 				</ul>
+				<button onClick={() => dispatch(incrementCounter())}>{count}</button>
 			</nav>
 		</header>
 	);
