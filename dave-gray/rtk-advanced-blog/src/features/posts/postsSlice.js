@@ -29,10 +29,13 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
 				});
 				return postsAdapter.setAll(initialState, loadedPosts);
 			},
-			providesTags: (result) => [
-				{ type: "Post", id: "LIST" },
-				...result.ids.map((id) => ({ type: "Post", id })),
-			],
+			providesTags: (result) =>
+				result
+					? [
+							{ type: "Post", id: "LIST" },
+							...result.ids.map((id) => ({ type: "Post", id })),
+					  ]
+					: [{ type: "Post", id: "LIST" }],
 		}),
 		getPostsByUserId: builder.query({
 			query: (id) => `/posts/?userId=${id}`,
@@ -95,6 +98,35 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
 			}),
 			invalidatesTags: (_result, _error, arg) => [{ type: "Post", id: arg.id }],
 		}),
+		addReaction: builder.mutation({
+			query: ({ postId, reactions }) => ({
+				url: `/posts/${postId}`,
+				method: "PATCH",
+				body: { reactions },
+			}),
+			async onQueryStarted(
+				{ postId, reactions },
+				{ dispatch, queryFulfilled }
+			) {
+				const patchResult = dispatch(
+					extendedApiSlice.util.updateQueryData(
+						"getPosts",
+						undefined,
+						(draft) => {
+							const post = draft.entities[postId];
+							if (post) {
+								post.reactions = reactions;
+							}
+						}
+					)
+				);
+				try {
+					await queryFulfilled;
+				} catch {
+					patchResult.undo();
+				}
+			},
+		}),
 	}),
 });
 
@@ -104,6 +136,7 @@ export const {
 	useUpdatePostMutation,
 	useDeletePostMutation,
 	useGetPostsByUserIdQuery,
+	useAddReactionMutation,
 } = extendedApiSlice;
 
 export const selectPostsResult = extendedApiSlice.endpoints.getPosts.select();
