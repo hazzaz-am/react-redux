@@ -12,11 +12,32 @@ const initialState: InitialStateType = {
 
 type ActionType = {
 	type: string;
+	value: boolean | string | ListType[] | null;
 };
 
 function movieReducer(state = initialState, action: ActionType) {
-	console.log(action);
-	return state;
+	switch (action.type) {
+		case "UPDATE_LOADER": {
+			return {
+				...state,
+				isLoading: action.value,
+			};
+		}
+		case "UPDATE_ERROR": {
+			return {
+				...state,
+				error: action.value,
+			};
+		}
+		case "UPDATE_DATA": {
+			return {
+				...state,
+				movies: action.value,
+			};
+		}
+		default:
+			return state;
+	}
 }
 
 export default movieReducer;

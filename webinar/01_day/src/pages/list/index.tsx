@@ -1,5 +1,6 @@
 import "./style.css";
 import AddToCart from "../../assets/add.png";
+import { useSelector } from "react-redux";
 
 type ListProps = {
 	onCartClick: () => void;
@@ -33,7 +34,7 @@ function List({ onCartClick }: ListProps) {
 	// if (isLoading) {
 	//   return <h1>Loading Data...</h1>;
 	// }
-	//console.log(movies);
+
 	return (
 		<div className="movie-list" onClick={onCartClick}>
 			{/* {!!movies &&

@@ -14,7 +14,7 @@ export const updateError = (value: string) => {
 	};
 };
 
-export const updateData = (value: Partial<ListType>) => {
+export const updateData = (value: ListType[] | null) => {
 	return {
 		type: "UPDATE_DATA",
 		value,
