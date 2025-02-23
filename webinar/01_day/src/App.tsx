@@ -24,7 +24,7 @@ function App() {
 			<div>
 				<Nav onCartClick={handleCartClick} />
 				{showCart && <Cart />}
-				{!showCart && <List onCartClick={handleCartClick} />}
+				{!showCart && <List />}
 			</div>
 		</>
 	);

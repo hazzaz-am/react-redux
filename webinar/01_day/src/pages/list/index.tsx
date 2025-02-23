@@ -1,36 +1,31 @@
 import "./style.css";
 import AddToCart from "../../assets/add.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { InitialStateType } from "../../store/reducers/movie-list";
+import { ListType } from "../../types/types";
+import { addToCart } from "../../store/actions/movie-list";
 
-type ListProps = {
-	onCartClick: () => void;
-};
-
-function List({ onCartClick }: ListProps) {
+function List() {
 	// const data = [{ id: 1, title: "1", amount: 100 }];
 	const moviesFromStore = useSelector(function (state: InitialStateType) {
 		return state;
 	});
 
-	const { isLoading, movies } = moviesFromStore;
+	const { isLoading, movies, cart } = moviesFromStore;
+	console.log(cart);
 
+	const dispatch = useDispatch();
 
-	// const dispatch = useDispatch();
-
-
-	// function handleAddToCart(movie) {
-	//   return () => {
-	//     dispatch(addToCart(movie));
-	//   };
-	// }
+	function handleAddToCart(movie: ListType) {
+			dispatch(addToCart(movie));
+	}
 
 	if (isLoading) {
 		return <h1>Loading Data...</h1>;
 	}
 
 	return (
-		<div className="movie-list" onClick={onCartClick}>
+		<div className="movie-list">
 			{!!movies &&
 				movies?.map((movie) => {
 					const { title, thumbnail_width, thumbnail } = movie;
@@ -40,7 +35,10 @@ function List({ onCartClick }: ListProps) {
 							<img width="140px" height="170px" src={thumbnail} />
 							<span>{title}</span>
 							<div className="cart-btn">
-								<button className="cart-srap" >
+								<button
+									className="cart-srap"
+									onClick={() => handleAddToCart(movie)}
+								>
 									<span> Add to Cart</span>{" "}
 									<img src={AddToCart} height="22px" />
 								</button>
@@ -55,4 +53,4 @@ function List({ onCartClick }: ListProps) {
 }
 
 export default List;
-// onClick={handleAddToCart(movie)}
+//

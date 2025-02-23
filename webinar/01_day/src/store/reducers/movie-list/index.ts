@@ -22,18 +22,27 @@ type ActionType = {
 function movieReducer(state = initialState, action: ActionType) {
 	switch (action.type) {
 		case "UPDATE_LOADER":
-			return { ...state, isLoading: action.value as boolean }; // ✅ Correct
+			return { ...state, isLoading: action.value as boolean };
 
 		case "UPDATE_ERROR":
-			return { ...state, error: action.value as string }; // ✅ Correct
+			return { ...state, error: action.value as string };
 
 		case "UPDATE_DATA":
-			return { ...state, movies: action.value as ListType[] }; // ✅ Correct
+			return { ...state, movies: action.value as ListType[] };
+
+		case "UPDATE_CART": {
+			if (typeof action.value !== "object" || Array.isArray(action.value)) {
+				return state;
+			}
+			return {
+				...state,
+				cart: [...state.cart, action.value],
+			};
+		}
 
 		default:
 			return state;
 	}
 }
-
 
 export default movieReducer;

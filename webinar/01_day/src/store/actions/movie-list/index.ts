@@ -20,3 +20,12 @@ export const updateData = (value: ListType[]) => {
 		value,
 	};
 };
+
+export const addToCart = (value: ListType) => {
+	return {
+		type: "UPDATE_CART",
+		value,
+	};
+};
+
+
