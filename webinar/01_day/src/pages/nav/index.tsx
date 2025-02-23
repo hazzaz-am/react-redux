@@ -3,14 +3,15 @@ import Cart from "../../assets/cart.png";
 import Redux from "../../assets/redx.png";
 import ReactPNG from "../../assets/react.webp";
 import { useSelector } from "react-redux";
-import { InitialStateType } from "../../store/reducers/movie-list";
+import { RootState } from "../../store";
 
 type NavProps = {
 	onCartClick: () => void;
 };
 
 function Nav({ onCartClick }: NavProps) {
-	const cart = useSelector((state: InitialStateType) => state.cart);
+	const cart = useSelector((state: RootState) => state.cart.cart);
+	console.log(cart)
 
 	let cartCount = 0;
 	Object.keys(cart).forEach((key) => {

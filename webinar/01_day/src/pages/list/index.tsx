@@ -1,14 +1,13 @@
 import "./style.css";
 import AddToCart from "../../assets/add.png";
 import { useDispatch, useSelector } from "react-redux";
-import { InitialStateType } from "../../store/reducers/movie-list";
 import { ListType } from "../../types/types";
-import { addToCart } from "../../store/actions/movie-list";
+import { addToCart } from "../../store/actions/cart-actions/cartActions";
+import { RootState } from "../../store";
 
 function List() {
-	// const data = [{ id: 1, title: "1", amount: 100 }];
-	const moviesFromStore = useSelector(function (state: InitialStateType) {
-		return state;
+	const moviesFromStore = useSelector(function (state: RootState) {
+		return state.movie;
 	});
 
 	const { isLoading, movies } = moviesFromStore;
@@ -16,7 +15,7 @@ function List() {
 	const dispatch = useDispatch();
 
 	function handleAddToCart(movie: ListType) {
-			dispatch(addToCart(movie));
+		dispatch(addToCart(movie));
 	}
 
 	if (isLoading) {
@@ -28,7 +27,6 @@ function List() {
 			{!!movies &&
 				movies?.map((movie) => {
 					const { title, thumbnail_width, thumbnail } = movie;
-
 					return (
 						<div className="movie-card" key={thumbnail}>
 							<img width="140px" height="170px" src={thumbnail} />

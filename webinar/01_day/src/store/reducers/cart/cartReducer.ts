@@ -7,16 +7,14 @@ type CartType = {
 	};
 };
 
-export type InitialStateType = {
+export type CartStateType = {
 	cart: CartType;
-	movies: ListType[];
 	isLoading: boolean;
 	error: string;
 };
 
-const initialState: InitialStateType = {
+const initialState: CartStateType = {
 	cart: {},
-	movies: [],
 	isLoading: false,
 	error: "",
 };
@@ -26,17 +24,8 @@ type ActionType = {
 	value: boolean | string | ListType[];
 };
 
-function movieReducer(state = initialState, action: ActionType) {
+function cartReducer(state = initialState, action: ActionType) {
 	switch (action.type) {
-		case "UPDATE_LOADER":
-			return { ...state, isLoading: action.value as boolean };
-
-		case "UPDATE_ERROR":
-			return { ...state, error: action.value as string };
-
-		case "UPDATE_DATA":
-			return { ...state, movies: action.value as ListType[] };
-
 		case "UPDATE_CART": {
 			if (typeof action.value !== "object" || Array.isArray(action.value)) {
 				return state;
@@ -53,7 +42,6 @@ function movieReducer(state = initialState, action: ActionType) {
 			} else {
 				prevState.cart[key] = { count: 1, value };
 			}
-
 			return prevState;
 		}
 
@@ -72,4 +60,4 @@ function movieReducer(state = initialState, action: ActionType) {
 	}
 }
 
-export default movieReducer;
+export default cartReducer;

@@ -2,11 +2,11 @@ import "./style.css";
 import Delete from "../../assets/delete.png";
 import Checkout from "../../assets/checkout.png";
 import { useDispatch, useSelector } from "react-redux";
-import { InitialStateType } from "../../store/reducers/movie-list";
-import { removeFromCart } from "../../store/actions/movie-list";
+import { removeFromCart } from "../../store/actions/cart-actions/cartActions";
+import { RootState } from "../../store";
 
 function Cart() {
-	const cart = useSelector((state: InitialStateType) => state.cart);
+	const cart = useSelector((state: RootState) => state.cart.cart);
 	const dispatch = useDispatch();
 
 	const handleRemoveMovie = (key: string) => {

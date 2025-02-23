@@ -3,13 +3,13 @@ import {
 	updateData,
 	updateError,
 	updateLoader,
-} from "../store/actions/movie-list";
+} from "../store/actions/movie-list/movieActions";
 import { useDispatch, useSelector } from "react-redux";
-import { InitialStateType } from "../store/reducers/movie-list";
+import { RootState } from "../store";
 
 function useNetwork() {
 	const dispatch = useDispatch();
-	const state = useSelector((state: InitialStateType) => state);
+	const state = useSelector((state: RootState) => state.movie);
 	const { isLoading, error, movies } = state;
 
 	function fetch() {
