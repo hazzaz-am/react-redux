@@ -1,14 +1,21 @@
 import type { ListType } from "../../../types/types";
 
+type CartType = {
+	[key: string]: {
+		count: number;
+		value: ListType;
+	};
+};
+
 export type InitialStateType = {
-	cart: ListType[];
+	cart: CartType;
 	movies: ListType[];
 	isLoading: boolean;
 	error: string;
 };
 
 const initialState: InitialStateType = {
-	cart: [],
+	cart: {},
 	movies: [],
 	isLoading: false,
 	error: "",
@@ -34,10 +41,30 @@ function movieReducer(state = initialState, action: ActionType) {
 			if (typeof action.value !== "object" || Array.isArray(action.value)) {
 				return state;
 			}
-			return {
-				...state,
-				cart: [...state.cart, action.value],
-			};
+			const value = action.value;
+			const prevState = { ...state };
+			const key = value["title"];
+
+			if (prevState.cart[key]) {
+				prevState.cart[key] = {
+					...prevState.cart[key], // Preserve existing data
+					count: prevState.cart[key].count + 1, // Increment count
+				};
+			} else {
+				prevState.cart[key] = { count: 1, value };
+			}
+
+			return prevState;
+		}
+
+		case "REMOVE_FROM_CART": {
+			const prevState = { ...state };
+			const prevCart = { ...prevState.cart };
+			delete prevCart[action.value as string];
+
+			prevState.cart = { ...prevCart };
+
+			return prevState;
 		}
 
 		default:

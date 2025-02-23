@@ -1,60 +1,51 @@
 import "./style.css";
 import Delete from "../../assets/delete.png";
 import Checkout from "../../assets/checkout.png";
-// import { removeFromCart } from "../../store/actions/movie-list";
-// import { getCartSelector } from "../../store/reducers/cart";
-// import { store } from "../../store";
+import { useDispatch, useSelector } from "react-redux";
+import { InitialStateType } from "../../store/reducers/movie-list";
+import { removeFromCart } from "../../store/actions/movie-list";
+
 function Cart() {
-  // const cart = [{ id: 1, title: "1", amount: 100 }];
+	const cart = useSelector((state: InitialStateType) => state.cart);
+	const dispatch = useDispatch();
 
-  // const basket = useSelector(getCartSelector);
-  // useSelector((state) => [{ s: [] }], shallowEqual);
-  const total = 30000;
+	const handleRemoveMovie = (key: string) => {
+		dispatch(removeFromCart(key));
+	};
 
-  // console.log("store", store.getState());
+	return (
+		<div className="card list">
+			{Object.keys(cart).map((key) => {
+				const product = cart[key as keyof typeof cart];
 
-  // const dispatch = useDispatch();
+				const { count, value } = product;
+				const { title, thumbnail, thumbnail_width: amount } = value;
 
-  // function handleRemove(id) {
-  //   return () => {
-  //     dispatch(removeFromCart(id));
-  //   };
-  // }
+				return (
+					<div className="movi-cart" key={thumbnail}>
+						<div className="row-x">
+							<img height="100px" width="60px" src={thumbnail} />
+							<span className="movie-name">{title}</span>
+						</div>
 
-  return (
-    <div className="card list">
-      {/* {Object.keys(basket).map((key) => { */}
-        {/* const cart = basket[key]; */}
-        {/* console.log({ cart }); */}
-        {/* const product = cart.value; */}
+						<div className="calu">
+							x {product.count} = {count * amount}
+						</div>
 
-        {/* const { title, thumbnail, count, thumbnail_width: amount } = product; */}
+						<button className="btn" onClick={() => handleRemoveMovie(key)}>
+							Remove <img src={Delete} height="22px" />
+						</button>
+					</div>
+				);
+			})}
 
-        {/* return ( */}
-          <div className="movi-cart" >
-            <div className="row-x">
-              <img height="100px" width="60px" />
-              <span className="movie-name">Title</span>
-            </div>
+			{/* <h4>Total: {total}</h4> */}
 
-            <div className="calu">
-              x
-            </div>
-
-            <button className="btn">
-              Remove <img src={Delete} height="22px" />
-            </button>
-          </div>
-         {/* ); */}
-      {/* })}  */}
-
-      <h4>Total: {total}</h4>
-
-      <button className="btn">
-        Checkout <img height="22px" src={Checkout} />
-      </button>
-    </div>
-  );
+			<button className="btn">
+				Checkout <img height="22px" src={Checkout} />
+			</button>
+		</div>
+	);
 }
 
 export default Cart;

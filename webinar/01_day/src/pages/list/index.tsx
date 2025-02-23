@@ -11,8 +11,7 @@ function List() {
 		return state;
 	});
 
-	const { isLoading, movies, cart } = moviesFromStore;
-	console.log(cart);
+	const { isLoading, movies } = moviesFromStore;
 
 	const dispatch = useDispatch();
 

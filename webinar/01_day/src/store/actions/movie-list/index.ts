@@ -29,3 +29,9 @@ export const addToCart = (value: ListType) => {
 };
 
 
+export const removeFromCart = (value: string) => {
+	return {
+		type: "REMOVE_FROM_CART",
+		value,
+	};
+}

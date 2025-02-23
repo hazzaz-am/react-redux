@@ -2,22 +2,21 @@ import "./style.css";
 import Cart from "../../assets/cart.png";
 import Redux from "../../assets/redx.png";
 import ReactPNG from "../../assets/react.webp";
+import { useSelector } from "react-redux";
+import { InitialStateType } from "../../store/reducers/movie-list";
 
 type NavProps = {
 	onCartClick: () => void;
 };
 
 function Nav({ onCartClick }: NavProps) {
-	// const cart = useSelector(function (state) {
-	//   return state.cart.cart;
-	// });
+	const cart = useSelector((state: InitialStateType) => state.cart);
 
-	const cartCount = 0;
-
-	// Object.keys(cart || {}).forEach((key) => {
-	//   const data = cart[key];
-	//   cartCount = cartCount + data.count;
-	// });
+	let cartCount = 0;
+	Object.keys(cart).forEach((key) => {
+		const data = cart[key];
+		cartCount = cartCount + data.count;
+	});
 
 	return (
 		<div className="nav">
