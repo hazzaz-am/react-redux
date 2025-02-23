@@ -11,7 +11,7 @@ function App() {
 
 	const network = useNetwork();
 
-	if (!network.isLoading && !network.data) {
+	if (!network.isLoading && network.movies.length === 0) {
 		network.fetch();
 	}
 

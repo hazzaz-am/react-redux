@@ -1,22 +1,16 @@
-import axios from "axios";
 import { List } from "./data";
 import {
 	updateData,
 	updateError,
 	updateLoader,
 } from "../store/actions/movie-list";
-import { useDispatch } from "react-redux";
-import { ListType } from "../types/types";
+import { useDispatch, useSelector } from "react-redux";
+import { InitialStateType } from "../store/reducers/movie-list";
 
-type FetchTypes = {
-	isLoading: boolean;
-	error: string;
-	data: ListType[] | null;
-	fetch: () => void;
-};
-
-function useNetwork(): FetchTypes {
+function useNetwork() {
 	const dispatch = useDispatch();
+	const state = useSelector((state: InitialStateType) => state);
+	const { isLoading, error, movies } = state;
 
 	function fetch() {
 		dispatch(updateLoader(true));
@@ -24,26 +18,27 @@ function useNetwork(): FetchTypes {
 		dispatch(updateData([]));
 
 		setTimeout(() => {
-			axios
-				.get("/data.json")
-				.then(() => {
-					updateData(List);
-				})
-				.catch((e) => {
-					console.log(e);
-					dispatch(updateError(e.message));
-				})
-				.finally(() => {
-					dispatch(updateLoader(false));
-				});
+			try {
+				if (!List || List.length === 0) {
+					throw new Error("No data available");
+				}
+
+				dispatch(updateData(List)); // ✅ Load local List data
+			} catch (e) {
+				if (e instanceof Error) {
+					dispatch(updateError(e.message)); // ✅ Handle error
+				}
+			} finally {
+				dispatch(updateLoader(false)); // ✅ Stop loading
+			}
 		}, 1000);
 	}
 
 	return {
-		isLoading: false,
-		error: "",
-		data: null,
 		fetch,
+		isLoading,
+		error,
+		movies,
 	};
 }
 

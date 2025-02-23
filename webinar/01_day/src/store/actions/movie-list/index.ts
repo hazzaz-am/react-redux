@@ -14,7 +14,7 @@ export const updateError = (value: string) => {
 	};
 };
 
-export const updateData = (value: ListType[] | null) => {
+export const updateData = (value: ListType[]) => {
 	return {
 		type: "UPDATE_DATA",
 		value,
