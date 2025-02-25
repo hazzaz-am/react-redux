@@ -22,8 +22,8 @@ function App() {
 	return (
 		<>
 			<div>
-				{/* <Nav onCartClick={handleCartClick} /> */}
-				{/* {showCart && <Cart />} */}
+				<Nav onCartClick={handleCartClick} />
+				{showCart && <Cart />}
 				{!showCart && <List />}
 			</div>
 		</>

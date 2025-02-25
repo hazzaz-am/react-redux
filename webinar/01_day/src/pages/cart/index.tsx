@@ -2,8 +2,8 @@ import "./style.css";
 import Delete from "../../assets/delete.png";
 import Checkout from "../../assets/checkout.png";
 import { useDispatch, useSelector } from "react-redux";
-import { removeFromCart } from "../../store/actions/cart-actions/cartActions";
-import { RootState } from "../../store";
+import { RootState } from "../../store_2/store";
+import { removeFromCart } from "../../store_2/reducers/cartReducer";
 
 function Cart() {
 	const cart = useSelector((state: RootState) => state.cart.cart);

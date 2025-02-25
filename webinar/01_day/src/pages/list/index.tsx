@@ -2,8 +2,8 @@ import "./style.css";
 import AddToCart from "../../assets/add.png";
 import { useDispatch, useSelector } from "react-redux";
 import { ListType } from "../../types/types";
-import { addToCart } from "../../store/actions/cart-actions/cartActions";
 import { RootState } from "../../store_2/store";
+import { updateCart } from "../../store_2/reducers/cartReducer";
 
 function List() {
 	const moviesFromStore = useSelector(function (state: RootState) {
@@ -15,7 +15,7 @@ function List() {
 	const dispatch = useDispatch();
 
 	function handleAddToCart(movie: ListType) {
-		dispatch(addToCart(movie));
+		dispatch(updateCart(movie));
 	}
 
 	if (isLoading) {

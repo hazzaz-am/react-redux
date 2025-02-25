@@ -3,7 +3,7 @@ import Cart from "../../assets/cart.png";
 import Redux from "../../assets/redx.png";
 import ReactPNG from "../../assets/react.webp";
 import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { RootState } from "../../store_2/store";
 
 type NavProps = {
 	onCartClick: () => void;
