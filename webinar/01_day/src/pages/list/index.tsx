@@ -3,11 +3,11 @@ import AddToCart from "../../assets/add.png";
 import { useDispatch, useSelector } from "react-redux";
 import { ListType } from "../../types/types";
 import { addToCart } from "../../store/actions/cart-actions/cartActions";
-import { RootState } from "../../store";
+import { RootState } from "../../store_2/store";
 
 function List() {
 	const moviesFromStore = useSelector(function (state: RootState) {
-		return state.movie;
+		return state.movies;
 	});
 
 	const { isLoading, movies } = moviesFromStore;

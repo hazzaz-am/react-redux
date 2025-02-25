@@ -5,12 +5,13 @@ import {
 	updateLoader,
 } from "../store/actions/movie-list/movieActions";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
+import { updateMovieAction } from "../store_2/reducers/movieReducer";
+import { RootState } from "../store_2/store";
 
 function useNetwork() {
 	const dispatch = useDispatch();
-	const state = useSelector((state: RootState) => state.movie);
-	const { isLoading, error, movies } = state;
+	const state = useSelector((state: RootState) => state.movies.movies);
+	console.log(state)
 
 	function fetch() {
 		dispatch(updateLoader(true));
@@ -23,7 +24,8 @@ function useNetwork() {
 					throw new Error("No data available");
 				}
 
-				dispatch(updateData(List)); // ✅ Load local List data
+				// dispatch(updateData(List));
+				dispatch(updateMovieAction(List));
 			} catch (e) {
 				if (e instanceof Error) {
 					dispatch(updateError(e.message)); // ✅ Handle error
@@ -36,9 +38,7 @@ function useNetwork() {
 
 	return {
 		fetch,
-		isLoading,
-		error,
-		movies,
+		state,
 	};
 }
 

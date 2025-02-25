@@ -11,7 +11,7 @@ function App() {
 
 	const network = useNetwork();
 
-	if (!network.isLoading && network?.movies?.length === 0) {
+	if (network?.state?.length === 0) {
 		network?.fetch();
 	}
 
@@ -22,8 +22,8 @@ function App() {
 	return (
 		<>
 			<div>
-				<Nav onCartClick={handleCartClick} />
-				{showCart && <Cart />}
+				{/* <Nav onCartClick={handleCartClick} /> */}
+				{/* {showCart && <Cart />} */}
 				{!showCart && <List />}
 			</div>
 		</>
