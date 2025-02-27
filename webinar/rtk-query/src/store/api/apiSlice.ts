@@ -8,6 +8,7 @@ const apiSlice = createApi({
 	endpoints: (builder) => ({
 		getProducts: builder.query({
 			query: () => "/",
+			transformResponse: (res) => res.products || [],
 		}),
 	}),
 });

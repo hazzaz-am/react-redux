@@ -3,7 +3,7 @@ import { useGetProductsQuery } from "./store/api/apiSlice";
 
 function App() {
 	const { data } = useGetProductsQuery("");
-	console.log(data.products);
+	console.log(data);
 
 	return (
 		<>
